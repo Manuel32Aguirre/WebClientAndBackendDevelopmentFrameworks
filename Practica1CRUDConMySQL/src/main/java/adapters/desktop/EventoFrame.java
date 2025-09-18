@@ -1,5 +1,9 @@
 package adapters.desktop;
 
+import domain.dao.CategoriaDAO;
+import domain.dao.EventoDAO;
+import domain.dto.EventoDTO;
+import domain.pojo.Categoria;
 import domain.pojo.Evento;
 
 import javax.swing.*;
@@ -7,6 +11,8 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class EventoFrame extends JFrame {
@@ -22,6 +28,8 @@ public class EventoFrame extends JFrame {
     JButton btnEliminar = new JButton("Eliminar");
 
     JLabel lblEvento = new JLabel("Eventos");
+
+    JComboBox comboCategoria = new JComboBox();
 
     //Tabla
     JTable tabla;
@@ -48,7 +56,7 @@ public class EventoFrame extends JFrame {
         form.add(new JLabel("Fecha (yyyy-mm-dd):  "));
         form.add(txtFecha);
         form.add(new JLabel("Categoria: "));
-        form.add(txtCategoria);
+        form.add(comboCategoria);
 
         JPanel header = new JPanel(new FlowLayout());
         lblEvento.setFont(new Font("Arial", Font.BOLD, 20));
@@ -71,17 +79,24 @@ public class EventoFrame extends JFrame {
 
     }
 
-    public void setData(List<Evento> eventos) {
+    public void setData(List<EventoDTO> eventos, CategoriaDAO dao) {
         modelo.setRowCount(0);
-        for (Evento e : eventos) {
+        for (EventoDTO e : eventos) {
             Object[] fila = {
                     e.getIdEvento(),
                     e.getNombre(),        // asegúrate que aquí va el nombre
                     e.getDescripcion(),   // aquí la descripción
                     e.getFechaEvento(),   // aquí la fecha
-                    e.getIdCategoria()    // aquí la categoría
+                    e.getNombreCategoria()    // aquí la categoría
             };
             modelo.addRow(fila);
+        }
+        comboCategoria.removeAllItems();
+
+        List<Categoria> categorias = new ArrayList<>();
+        categorias = dao.findAll();
+        for(Categoria c: categorias){
+            comboCategoria.addItem(c.getNombreCategoria());
         }
     }
     public Evento getFormEvento(Integer idIfSelectedOrNull) {

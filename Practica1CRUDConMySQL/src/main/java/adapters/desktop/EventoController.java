@@ -1,6 +1,8 @@
     package adapters.desktop;
 
+    import domain.dao.CategoriaDAO;
     import domain.dao.EventoDAO;
+    import domain.dto.EventoDTO;
     import domain.pojo.Evento;
 
     import javax.swing.*;
@@ -12,10 +14,12 @@
 
         private final EventoFrame view;
         private final EventoDAO dao;
+        private final CategoriaDAO categoriaDao;
 
         public EventoController(EventoFrame view, Connection conn) {
             this.view = view;
             this.dao = new EventoDAO(conn);
+            this.categoriaDao = new CategoriaDAO(conn);
             init();
         }
 
@@ -88,8 +92,8 @@
         }
 
         private void refresh() {
-            List<Evento> eventos = dao.findAll();
-            view.setData(eventos);
+            List<EventoDTO> eventos = dao.findAllWithCategoria();
+            view.setData(eventos, categoriaDao);
         }
 
         private void clearForm() {

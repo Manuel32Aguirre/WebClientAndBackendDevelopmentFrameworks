@@ -1,5 +1,6 @@
 package domain.dao;
 
+import domain.dto.EventoDTO;
 import domain.pojo.Evento;
 
 import java.sql.*;
@@ -15,6 +16,8 @@ public class EventoDAO implements Dao<Evento, Integer> {
     private static final String SQL_DELETE = "{ call delete_evento(?) }";
     private static final String SQL_SELECT_BY_ID = "{ call find_evento_by_id(?) }";
     private static final String SQL_SELECT_ALL = "{ call select_all_eventos() }";
+    private static final String SQL_SELECT_ALL_WITH_CATEGORIA = "{ call select_all_eventos_with_categoria() } ";
+
 
     private final Connection conexion;
 
@@ -83,10 +86,10 @@ public class EventoDAO implements Dao<Evento, Integer> {
              ResultSet rs = cs.executeQuery()) {
             while (rs.next()) {
                 Evento ev = new Evento();
-                ev.setIdEvento(rs.getInt("idEvent"));
-                ev.setNombre(rs.getString("name"));
-                ev.setDescripcion(rs.getString("description"));
-                ev.setFechaEvento(rs.getDate("dateEvent").toLocalDate());
+                ev.setIdEvento(rs.getInt("idEvento"));
+                ev.setNombre(rs.getString("nombre"));
+                ev.setDescripcion(rs.getString("descripcion"));
+                ev.setFechaEvento(rs.getDate("fechaEvento").toLocalDate());
                 ev.setIdCategoria(rs.getInt("idCategoria"));
                 list.add(ev);
 
@@ -120,6 +123,26 @@ public class EventoDAO implements Dao<Evento, Integer> {
             }
         } catch (SQLException ex) {
             Logger.getLogger(EventoDAO.class.getName()).log(Level.SEVERE, "Error al consultar evento por id", ex);
+        }
+        return lista;
+    }
+    public List<EventoDTO> findAllWithCategoria(){
+        List<EventoDTO> lista = new ArrayList<>();
+        try(CallableStatement cs = conexion.prepareCall(SQL_SELECT_ALL_WITH_CATEGORIA)){
+            ResultSet rs = cs.executeQuery();
+            while(rs.next()){
+                EventoDTO ev = new EventoDTO(
+                        rs.getInt("idEvento"),
+                        rs.getString("nombre"),
+                        rs.getString("descripcion"),
+                        rs.getDate("fechaEvento").toLocalDate(),
+                        rs.getString("nombreCategoria")
+                );
+                lista.add(ev);
+            }
+
+        }catch(SQLException ex){
+            Logger.getLogger(EventoDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return lista;
     }
