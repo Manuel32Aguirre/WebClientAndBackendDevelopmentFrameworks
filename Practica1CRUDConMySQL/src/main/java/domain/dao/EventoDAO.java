@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class EventoDAO implements Dao<Evento, Integer> {
+public class EventoDAO implements GenericDao<Evento, Integer> {
 
     private static final String SQL_INSERT = "{ call create_evento(?, ?, ?, ?, ?) }";
     private static final String SQL_UPDATE = "{ call update_evento(?, ?, ?, ?, ?) }";
@@ -126,11 +126,12 @@ public class EventoDAO implements Dao<Evento, Integer> {
         }
         return lista;
     }
-    public List<EventoDTO> findAllWithCategoria(){
+
+    public List<EventoDTO> findAllWithCategoria() {
         List<EventoDTO> lista = new ArrayList<>();
-        try(CallableStatement cs = conexion.prepareCall(SQL_SELECT_ALL_WITH_CATEGORIA)){
+        try (CallableStatement cs = conexion.prepareCall(SQL_SELECT_ALL_WITH_CATEGORIA)) {
             ResultSet rs = cs.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 EventoDTO ev = new EventoDTO(
                         rs.getInt("idEvento"),
                         rs.getString("nombre"),
@@ -141,7 +142,7 @@ public class EventoDAO implements Dao<Evento, Integer> {
                 lista.add(ev);
             }
 
-        }catch(SQLException ex){
+        } catch (SQLException ex) {
             Logger.getLogger(EventoDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return lista;

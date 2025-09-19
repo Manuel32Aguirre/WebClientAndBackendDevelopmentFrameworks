@@ -11,4 +11,10 @@ public class Categoria {
     private int idCategoria;
     private String nombreCategoria;
     private String descripcion;
+
+    @Override
+    public String toString() {
+        return nombreCategoria;
+    }
+
 }

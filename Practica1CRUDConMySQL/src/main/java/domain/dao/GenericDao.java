@@ -3,7 +3,7 @@ package domain.dao;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface Dao<TipoEntidad, TipoId> {
+public interface GenericDao<TipoEntidad, TipoId> {
     boolean create(TipoEntidad entidad) throws SQLException;
 
     boolean update(TipoEntidad entidad) throws SQLException;

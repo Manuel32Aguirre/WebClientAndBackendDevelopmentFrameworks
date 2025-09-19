@@ -1,9 +1,11 @@
 package adapters.desktop;
 
+import infrastructure.database.ConnectionFactory;
+
 import javax.swing.*;
 import java.sql.Connection;
 
-public class DesktopLauncher {
+public class App {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {

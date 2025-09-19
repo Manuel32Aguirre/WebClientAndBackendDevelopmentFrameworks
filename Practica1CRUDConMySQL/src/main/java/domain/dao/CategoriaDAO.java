@@ -1,7 +1,6 @@
 package domain.dao;
 
 import domain.pojo.Categoria;
-import domain.pojo.Evento;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,7 +8,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class CategoriaDAO implements Dao<Categoria, Integer> {
+public class CategoriaDAO implements GenericDao<Categoria, Integer> {
     private static final String SQL_INSERT = "INSERT INTO Categoria(nombreCategoria, descripcion) VALUES (?, ?)";
     private static final String SQL_UPDATE = "UPDATE Categoria SET nombreCategoria = ?, descripcion = ? WHERE idCategoria = ?";
     private static final String SQL_DELETE = "DELETE FROM Categoria WHERE idCategoria = ?";

@@ -12,12 +12,12 @@ public class MainFrame extends JFrame {
         super("Gestión de Categorías y Eventos");
         this.conn = conn;
 
-        // Configuración básica
+
         setSize(900, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Barra de menú
+
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("Gestionar");
 
@@ -29,11 +29,10 @@ public class MainFrame extends JFrame {
         menuBar.add(menu);
         setJMenuBar(menuBar);
 
-        // Panel central donde cargaremos los frames
+
         panelContenido = new JPanel(new BorderLayout());
         setContentPane(panelContenido);
 
-        // Acciones
         mostrarEventos();
         menuCategorias.addActionListener(e -> mostrarCategorias());
         menuEventos.addActionListener(e -> mostrarEventos());

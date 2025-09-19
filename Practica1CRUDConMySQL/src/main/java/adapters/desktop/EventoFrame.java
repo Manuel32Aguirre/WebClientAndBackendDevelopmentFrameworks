@@ -1,28 +1,29 @@
 package adapters.desktop;
 
+import com.toedter.calendar.JDateChooser;
 import domain.dao.CategoriaDAO;
-import domain.dao.EventoDAO;
+
 import domain.dto.EventoDTO;
 import domain.pojo.Categoria;
 import domain.pojo.Evento;
 
 import javax.swing.*;
-import javax.swing.border.Border;
+
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.List;
 
+
 public class EventoFrame extends JFrame {
-    //Agregamos los campos de texto
+
     JTextField txtNombre = new JTextField(20);
     JTextField txtDescripcion = new JTextField(20);
-    JTextField txtFecha = new JTextField(10);
-    JTextField txtCategoria = new JTextField(5);
+    JDateChooser dateChooser = new JDateChooser();
 
-    //Agregamos los botones
+
     JButton btnCrear = new JButton("Crear");
     JButton btnActualizar = new JButton("Actualizar");
     JButton btnEliminar = new JButton("Eliminar");
@@ -38,7 +39,7 @@ public class EventoFrame extends JFrame {
     public EventoFrame() {
         super("Eventos");
 
-        //Configuracion basica
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
         setLocationRelativeTo(null);
@@ -54,7 +55,8 @@ public class EventoFrame extends JFrame {
         form.add(new JLabel("Descripcion: "));
         form.add(txtDescripcion);
         form.add(new JLabel("Fecha (yyyy-mm-dd):  "));
-        form.add(txtFecha);
+        form.add(dateChooser);
+
         form.add(new JLabel("Categoria: "));
         form.add(comboCategoria);
 
@@ -62,7 +64,6 @@ public class EventoFrame extends JFrame {
         lblEvento.setFont(new Font("Arial", Font.BOLD, 20));
         header.add(lblEvento);
 
-        //Panel de los botones
         JPanel acciones = new JPanel();
         acciones.add(btnCrear);
         acciones.add(btnActualizar);
@@ -72,7 +73,7 @@ public class EventoFrame extends JFrame {
         contenedorCentro.add(form, BorderLayout.NORTH);
         contenedorCentro.add(new JScrollPane(tabla), BorderLayout.CENTER);
 
-        //Agregamos todo al frame
+
         add(header, BorderLayout.NORTH);
         add(contenedorCentro, BorderLayout.CENTER);
         add(acciones, BorderLayout.SOUTH);
@@ -84,10 +85,10 @@ public class EventoFrame extends JFrame {
         for (EventoDTO e : eventos) {
             Object[] fila = {
                     e.getIdEvento(),
-                    e.getNombre(),        // asegúrate que aquí va el nombre
-                    e.getDescripcion(),   // aquí la descripción
-                    e.getFechaEvento(),   // aquí la fecha
-                    e.getNombreCategoria()    // aquí la categoría
+                    e.getNombre(),
+                    e.getDescripcion(),
+                    e.getFechaEvento(),
+                    e.getNombreCategoria()
             };
             modelo.addRow(fila);
         }
@@ -95,33 +96,31 @@ public class EventoFrame extends JFrame {
 
         List<Categoria> categorias = new ArrayList<>();
         categorias = dao.findAll();
-        for(Categoria c: categorias){
-            comboCategoria.addItem(c.getNombreCategoria());
+        for (Categoria c : categorias) {
+            comboCategoria.addItem(c);
         }
     }
+
     public Evento getFormEvento(Integer idIfSelectedOrNull) {
         String nombre = txtNombre.getText().trim();
         String descripcion = txtDescripcion.getText().trim();
-        String fechaTexto = txtFecha.getText().trim();
-        String idCatTexto = txtCategoria.getText().trim();
 
-        // idEvento = 0 si es nuevo, o el que venga cuando sea actualización
+
         int idEvento = (idIfSelectedOrNull == null) ? 0 : idIfSelectedOrNull;
 
-        // convertir fecha
         LocalDate fecha = null;
-        if (!fechaTexto.isEmpty()) {
-            fecha = LocalDate.parse(fechaTexto); // formato yyyy-MM-dd
+        if (dateChooser.getDate() != null) {
+            fecha = dateChooser.getDate().toInstant()
+                    .atZone(java.time.ZoneId.systemDefault())
+                    .toLocalDate();
         }
 
-        // convertir idCategoria
-        int idCategoria = 0;
-        if (!idCatTexto.isEmpty()) {
-            idCategoria = Integer.parseInt(idCatTexto);
-        }
+        Categoria selected = (Categoria) comboCategoria.getSelectedItem();
+        int idCategoria = (selected != null) ? selected.getIdCategoria() : 0;
 
         return new Evento(idEvento, nombre, descripcion, fecha, idCategoria);
     }
+
 
     public Integer getSelectedId() {
         int row = tabla.getSelectedRow();
