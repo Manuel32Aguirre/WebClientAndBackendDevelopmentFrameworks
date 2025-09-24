@@ -1,0 +1,12 @@
+version: '3.9'
+services:
+    postgres:
+      image: postgres:latest
+      container_name: practica2postgres
+      restart: always
+      environment:
+        POSTGRES_USER: manuel
+        POSTGRES_PASSWORD: 1234
+        POSTGRES_DB: "7CM_26_1"
+      ports:
+        - "3000:5432"
